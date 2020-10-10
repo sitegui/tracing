@@ -128,8 +128,6 @@ mod fmt_subscriber;
 pub mod format;
 pub mod time;
 pub mod writer;
-#[allow(deprecated)]
-pub use fmt_subscriber::LayerBuilder;
 pub use fmt_subscriber::{FmtContext, FormattedFields, Subscriber};
 
 use crate::subscriber::Subscriber as _;
@@ -825,26 +823,6 @@ impl<N, E, F, W> CollectorBuilder<N, E, F, W> {
             filter: self.filter,
             inner: self.inner.event_format(fmt_event),
         }
-    }
-
-    /// Sets whether or not spans inherit their parents' field values (disabled
-    /// by default).
-    #[deprecated(since = "0.2.0", note = "this no longer does anything")]
-    pub fn inherit_fields(self, inherit_fields: bool) -> Self {
-        let _ = inherit_fields;
-        self
-    }
-
-    /// Sets the function that the subscriber being built should use to format
-    /// events that occur.
-    #[deprecated(since = "0.2.0", note = "renamed to `event_format`.")]
-    pub fn on_event<E2>(self, fmt_event: E2) -> CollectorBuilder<N, E2, F, W>
-    where
-        E2: FormatEvent<Registry, N> + 'static,
-        N: for<'writer> FormatFields<'writer> + 'static,
-        W: MakeWriter + 'static,
-    {
-        self.event_format(fmt_event)
     }
 
     /// Sets the [`MakeWriter`] that the subscriber being built will use to write events.
